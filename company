@@ -1,0 +1,865 @@
+Inoseek Company Dashboard Definition
+App Overview
+The Inoseek Company Dashboard is a secure, responsive React-based single-page application (SPA) for company administrators to manage parking system operations, with exportable reports in PDF and CSV formats. It provides real-time insights, data manipulation (CRUD), and support functionalities, powered by /api/company and /api/login endpoints.
+
+Name: Inoseek Company Dashboard
+Tagline: Park and Dash
+Brand Colors: Primary Blue (#1E90FF), Secondary Light Blue (#87CEEB), Accent Dark Blue (#4169E1)
+Logo: "Inoseek" in Montserrat Bold, #1E90FF, with a minimalist parking icon (e.g., car or "P") in the "O".
+Target Audience: Company administrators in Kenya (phone format: 2547XXXXXXXX or 2541XXXXXXXX).
+Platform: React SPA with Tailwind CSS, CDN-hosted, optimized for all devices.
+
+Branding Guidelines
+
+Typography: Montserrat Bold (headings, 24px desktop, 20px mobile), Roboto Regular (body, 16px desktop, 14px mobile), Roboto Light (captions, 14px desktop, 12px mobile).
+Color Palette:
+Primary Blue (#1E90FF): Buttons, links, active states.
+Secondary Light Blue (#87CEEB): Backgrounds, gradients.
+Accent Dark Blue (#4169E1): Hover, secondary actions.
+Neutral: White (#FFFFFF), Gray (#333333), Light Gray (#E0E0E0).
+Error: Red (#FF4444), Success: Green (#00C851).
+
+
+Logo Usage: Top-left in sidebar (32px desktop, 24px mobile), centered on login page (48px desktop, 36px mobile), 16px padding.
+Iconography: Material Icons, 24px desktop, 20px mobile, tinted #1E90FF/#4169E1.
+Animations: 300ms ease-in-out for buttons, 500ms for page transitions, Lottie for loaders.
+Tone: Professional, efficient, data-driven, aligned with "Park and Dash".
+Dark Mode: Background #121212, text #E0E0E0, blue shades darken (e.g., #1E90FF → #1565C0).
+Accessibility: WCAG 2.1, ARIA labels, keyboard navigation, high contrast.
+
+Responsiveness
+
+Desktop (>1024px): Fixed sidebar, multi-column grids (e.g., 3x2 KPIs), large tables, detailed modals.
+Tablet (768px-1024px): Collapsible sidebar (hamburger menu), 2-column grids, stacked tables, smaller fonts/icons.
+Mobile (<768px): Full-screen hamburger menu, single-column layouts, card-based tables, touch-friendly buttons (min 44px height), full-screen modals.
+Techniques: Tailwind responsive classes (sm:, md:, lg:), fluid typography (clamp), percentage-based widths, touch-optimized interactions.
+
+Security Features
+
+Authentication: JWT (access_token, refresh_token) via /api/login, stored in localStorage, auto-refreshed.
+Authorization: IsCompanyAdmin restricts access to company_admin users.
+HTTPS: All API calls over secure connections.
+Input Validation: Client-side sanitization for XSS prevention, server-side via serializers.
+Error Handling: User-friendly messages for 400/401/403/404, redirect to login on unauthorized access.
+Session Management: Auto-logout after 30 minutes inactivity, token refresh on API calls.
+Rate Limiting: Client-side throttling, aligned with server-side limits.
+Export Security: Exports restricted to authenticated users, data sanitized.
+
+Exportable Reports
+
+Overview: Export data as PDF (styled with Inoseek branding) and CSV (raw data) from Clients, Locations, Users, Staff, Parking Sessions, Parking History, Financial Transactions, Analytics, and Support screens.
+Functionality:
+PDF: Includes logo, timestamp, filters, styled tables/charts (e.g., revenue trends).
+CSV: Raw data with column headers, respecting filters.
+File Naming: Inoseek_[Screen]_[YYYYMMDD].pdf/csv (e.g., Inoseek_Clients_20250801.csv).
+Filters: Exports reflect current search, date range, or status filters.
+
+
+UI Integration:
+Export Button: #1E90FF, 300ms scale, in top-right of each screen.
+Modal: Select PDF/CSV, confirm export, #1E90FF buttons, glassmorphic.
+Loading Spinner: Lottie animation, 300ms fade-in.
+Notifications: Success (#00C851), Error (#FF4444), glassmorphic, 500ms slide-in.
+
+
+Responsive Notes:
+Desktop: Export button in toolbar, modal 400px wide.
+Tablet: Button in toolbar, modal 80% width.
+Mobile: Button as floating action, full-screen modal.
+
+
+Accessibility: PDF text readable by screen readers, CSV headers clear.
+
+Screens and Functionalities
+Sidebar navigation (collapsible on tablet/mobile) with views mapped to API endpoints, featuring glassmorphic cards, neumorphic buttons, and animations.
+1. Login Screen
+
+Purpose: Authenticate administrators.
+Functionality:
+Collect email, password.
+Submit to /api/login (LoginAPIView).
+Success: Store tokens, navigate to Dashboard.
+Error: Display invalid credentials/unverified email.
+
+
+API Endpoints: POST /api/login
+UI Elements:
+Logo: "Inoseek" (Montserrat Bold, 48px desktop, 36px mobile, #1E90FF).
+Tagline: "Park and Dash" (Roboto, 18px desktop, 16px mobile, #333333).
+Inputs: Email, Password (Roboto, #E0E0E0 border, #1E90FF focus, neumorphic).
+Submit Button: "Login" (#1E90FF, 300ms scale, hover #4169E1).
+Error Message: Red (#FF4444), 200ms fade-in.
+Background: White, #87CEEB gradient (top 30%), glassmorphic container.
+Animation: Logo pulses (500ms), inputs slide in, button scales.
+
+
+UX Notes:
+Desktop: Centered form, 400px.
+Tablet: Form 80% width.
+Mobile: Full-width, 44px input height.
+Features: Password show/hide, auto-focus email, keyboard submit, error shake.
+
+
+
+2. Dashboard Screen
+
+Purpose: Global system overview.
+Functionality:
+Display KPIs: revenue, users, clients, locations, sessions, occupancy (CompanyDashboardAPIView).
+Show recent transactions (last 10).
+Export KPIs and transactions as PDF/CSV.
+
+
+API Endpoints: GET /api/company/dashboard
+UI Elements:
+Sidebar: Logo, navigation links (Dashboard, Clients, Locations, Users, Staff, Sessions, History, Financials, Analytics, Notifications, Settings, Support, Logout).
+KPI Cards: 6 glassmorphic cards (#1E90FF accents).
+Recent Transactions: Table (plate, space, fee, status).
+Export Button: #1E90FF, modal for PDF/CSV selection.
+Refresh Button: #1E90FF, 300ms rotate.
+Background: White, #87CEEB gradient header.
+Animation: Cards zoom in (500ms), table rows fade in, export modal zooms.
+
+
+UX Notes:
+Desktop: 3x2 KPI grid, full table.
+Tablet: 2x3 grid, stacked table.
+Mobile: Single-column KPIs, card-based table.
+Features: Hover tooltips, clickable rows, swipe-to-refresh on mobile, export respects view.
+
+
+
+3. Clients Management Screen
+
+Purpose: Manage client data.
+Functionality:
+List clients with locations, revenue (CompanyClientsAPIView).
+View/edit/delete details (CompanyClientDetailAPIView).
+Search/filter by name/email.
+Export client list as PDF/CSV (includes name, email, locations, revenue).
+
+
+API Endpoints:
+GET /api/company/clients
+GET/PUT/DELETE /api/company/clients/{client_id}
+
+
+UI Elements:
+Sidebar: Navigation.
+Client Table: Columns (name, email, locations, revenue, actions), glassmorphic.
+Search Bar: #1E90FF border, 300ms expand.
+Action Buttons: View (#1E90FF), Edit (#4169E1), Delete (#FF4444), neumorphic.
+Export Button: #1E90FF, modal for PDF/CSV.
+Modal: Edit form (name, email, #1E90FF focus).
+Background: White.
+Animation: Table rows slide in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Confirm delete, live search, pagination, export with filters.
+
+
+
+4. Locations Management Screen
+
+Purpose: Manage parking lots.
+Functionality:
+List lots (CompanyLocationsAPIView).
+View/edit/delete details (CompanyLocationDetailAPIView).
+Filter by name/location.
+Export lot list as PDF/CSV (includes name, location, spaces, client).
+
+
+API Endpoints:
+GET /api/company/locations
+GET/PUT/DELETE /api/company/locations/{location_id}
+
+
+UI Elements:
+Sidebar: Navigation.
+Location Table: Columns (name, location, spaces, client, actions), glassmorphic.
+Filter Dropdown: #1E90FF, 300ms slide-down.
+Action Buttons: View (#1E90FF), Edit (#4169E1), Delete (#FF4444).
+Export Button: #1E90FF, modal for PDF/CSV.
+Modal: Edit form (name, location, spaces, #1E90FF focus).
+Background: White.
+Animation: Table rows fade in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Confirm delete, clickable rows, export with filters.
+
+
+
+5. Users (Drivers) Screen
+
+Purpose: View driver data.
+Functionality:
+List drivers (CompanyUsersAPIView).
+View/edit details (CompanyUserDetailAPIView).
+Search by name/email.
+Export user list as PDF/CSV (includes name, email, phone, balance).
+
+
+API Endpoints:
+GET /api/company/users
+GET/PUT /api/company/users/{user_id}
+
+
+UI Elements:
+Sidebar: Navigation.
+User Table: Columns (name, email, phone, balance, actions), glassmorphic.
+Search Bar: #1E90FF border.
+Action Buttons: View (#1E90FF), Edit (#4169E1).
+Export Button: #1E90FF, modal for PDF/CSV.
+Modal: Edit form (name, email, phone, #1E90FF focus).
+Background: White.
+Animation: Table rows slide in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Live search, pagination, export with filters, disable sensitive fields.
+
+
+
+6. Staff Management Screen
+
+Purpose: Manage staff accounts.
+Functionality:
+List, create, edit, delete staff (CompanyStaffAPIView, CompanyStaffDetailAPIView).
+Search by name/email.
+Export staff list as PDF/CSV (includes name, email, phone).
+
+
+API Endpoints:
+GET/POST /api/company/staff
+GET/PUT/DELETE /api/company/staff/{staff_id}
+
+
+UI Elements:
+Sidebar: Navigation.
+Staff Table: Columns (name, email, phone, actions), glassmorphic.
+Create Button: #1E90FF, 300ms scale.
+Search Bar: #1E90FF border.
+Action Buttons: View (#1E90FF), Edit (#4169E1), Delete (#FF4444).
+Export Button: #1E90FF, modal for PDF/CSV.
+Modal: Create/edit form (name, email, password, #1E90FF focus).
+Background: White.
+Animation: Table rows fade in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Confirm delete, validate email/password, export with filters.
+
+
+
+7. Parking Sessions Screen
+
+Purpose: Monitor live parking sessions.
+Functionality:
+List ongoing sessions (CompanyParkingSessionsAPIView).
+Real-time updates via polling.
+Filter by lot/space.
+Export sessions as PDF/CSV (includes plate, space, lot, entry time, duration).
+
+
+API Endpoints: GET /api/company/parking-sessions
+UI Elements:
+Sidebar: Navigation.
+Session Table: Columns (plate, space, lot, entry time, duration), glassmorphic.
+Filter Dropdown: Lot/space, #1E90FF.
+Refresh Button: #1E90FF, 300ms rotate.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Table rows slide in, duration flips (HH:MM:SS), export button scales.
+
+
+UX Notes:
+Desktop: Full table.
+Tablet: Stacked table.
+Mobile: Card-based list.
+Features: Live duration timer, auto-refresh (30s), export with filters.
+
+
+
+8. Parking History Screen
+
+Purpose: View all parking transactions.
+Functionality:
+List transactions (CompanyParkingHistoryAPIView).
+Filter by date/lot.
+Export history as PDF/CSV (includes plate, space, lot, entry/exit, fee, status).
+
+
+API Endpoints: GET /api/company/parking-history
+UI Elements:
+Sidebar: Navigation.
+History Table: Columns (plate, space, lot, entry/exit, fee, status), glassmorphic.
+Date Filter: Range picker, #1E90FF.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Table rows fade in, export button scales.
+
+
+UX Notes:
+Desktop: Full table.
+Tablet: Stacked table.
+Mobile: Card-based list.
+Features: Date range export, pagination, responsive layout.
+
+
+
+9. Financial Transactions Screen
+
+Purpose: View revenue trends.
+Functionality:
+Display 30-day revenue by day (CompanyFinancialTransactionsAPIView).
+Visualize as line/bar chart.
+Filter by date range.
+Export chart/table as PDF/CSV (includes date, revenue).
+
+
+API Endpoints: GET /api/company/financial-transactions
+UI Elements:
+Sidebar: Navigation.
+Chart: Line/bar (#1E90FF lines, 500ms fade-in).
+Date Range Picker: #1E90FF, 300ms slide-down.
+Table: Date, revenue, glassmorphic.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Chart animates, table rows slide in, export button scales.
+
+
+UX Notes:
+Desktop: Chart above table.
+Tablet: Chart full-width, table below.
+Mobile: Stacked chart/table.
+Features: Interactive chart (hover tooltips), export with filters.
+
+
+
+10. Analytics & Reports Screen
+
+Purpose: Analyze client performance.
+Functionality:
+List clients with revenue, sessions (CompanyAnalyticsAPIView).
+Visualize as bar/pie chart.
+Export analytics as PDF/CSV (includes client, revenue, sessions).
+
+
+API Endpoints: GET /api/company/analytics
+UI Elements:
+Sidebar: Navigation.
+Analytics Table: Columns (client, revenue, sessions), glassmorphic.
+Chart: Bar/pie (#1E90FF/#4169E1).
+Filter Dropdown: Client, #1E90FF.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Chart zooms, table rows fade in, export button scales.
+
+
+UX Notes:
+Desktop: Chart beside table.
+Tablet: Chart above table.
+Mobile: Stacked chart/table.
+Features: Export with filters, clickable rows.
+
+
+
+11. Notifications & Alerts Screen
+
+Purpose: View system alerts.
+Functionality:
+List recent alerts (CompanyNotificationsAPIView).
+Future: Mark as resolved.
+Export alerts as PDF/CSV (includes plate, space, description, status).
+
+
+API Endpoints: GET /api/company/notifications
+UI Elements:
+Sidebar: Navigation.
+Alert Table: Columns (plate, space, description, status), glassmorphic.
+Resolve Button: #1E90FF (disabled).
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Table rows slide in, export button scales.
+
+
+UX Notes:
+Desktop: Full table.
+Tablet: Stacked table.
+Mobile: Card-based list.
+Features: Filter by status, auto-refresh, export with filters.
+
+
+
+12. System Settings Screen
+
+Purpose: Manage configurations.
+Functionality:
+View/edit settings (CompanySettingsAPIView).
+Export settings as PDF/CSV (TBD fields).
+
+
+API Endpoints: GET/PUT /api/company/settings
+UI Elements:
+Sidebar: Navigation.
+Form: Settings fields (TBD, #1E90FF focus), glassmorphic.
+Save Button: #1E90FF, 300ms scale.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Form fields fade in, export button scales.
+
+
+UX Notes:
+Desktop: Form 600px.
+Tablet: Form 80%.
+Mobile: Full-width form.
+Features: Confirm changes, export settings snapshot.
+
+
+
+13. Support / Helpdesk Screen
+
+Purpose: Manage support tickets.
+Functionality:
+List, create, update tickets (CompanySupportAPIView).
+Filter by status/user.
+Export tickets as PDF/CSV (includes subject, user, status, date).
+
+
+API Endpoints:
+GET/POST/PUT /api/company/support
+
+
+UI Elements:
+Sidebar: Navigation.
+Ticket Table: Columns (subject, user, status, date), glassmorphic.
+Create Button: #1E90FF, modal with subject/description.
+Update Button: #4169E1, modal for status/notes.
+Filter Dropdown: Status/user, #1E90FF.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Table rows slide in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Confirm updates, live filter, export with filters.
+
+
+
+Navigation Flow
+
+Unauthenticated: Login → Dashboard
+Authenticated: Sidebar navigates to Dashboard, Clients, Locations, Users, Staff, Sessions, History, Financials, Analytics, Notifications, Settings, Support, Logout
+Responsive Navigation:
+Desktop: Fixed sidebar.
+Tablet: Collapsible sidebar (hamburger toggle).
+Mobile: Full-screen hamburger menu.
+
+
+
+Technical Considerations
+
+Framework: React SPA, Tailwind CSS for responsive styling.
+API: Secure HTTP requests, token refresh on 401 errors.
+Storage: localStorage for JWT tokens, secure session management.
+Real-time: Polling for sessions/notifications, future WebSocket support.
+Export Libraries: Client-side PDF/CSV generation (e.g., pdfmake, PapaParse).
+Responsive Design: Tailwind responsive classes, fluid typography, flexible grids.
+Accessibility: ARIA labels, keyboard navigation, WCAG 2.1, accessible PDF exports.
+Localization: English/Swahili, Kenyan phone formats.
+
+Data Manipulation
+
+Clients: View, edit, delete (CompanyClientDetailAPIView).
+Locations: View, edit, delete (CompanyLocationDetailAPIView).
+Users: View, edit (CompanyUserDetailAPIView).
+Staff: Create, view, edit, delete (CompanyStaffAPIView, CompanyStaffDetailAPIView).
+Support: Create, update tickets (CompanySupportAPIView).
+Exports: PDF/CSV for all data-heavy screens, respecting filters.
+
+Integration with Mobile App
+
+Consistency: Shared branding (logo, colors, typography) with mobile app.
+Data Flow: Mobile app’s external system (car detection, payments, exits) updates dashboard’s sessions, financials, and analytics in real-time.
+Admin Power: Dashboard supports full CRUD and exports, unlike mobile app’s read-heavy focus.
+
+Future Enhancements
+
+Detailed client/location/user views (implement GET /api/company/clients/{client_id}, etc.).
+Alert resolution endpoint.
+Advanced settings (e.g., fee structures).
+Multi-language support.
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.renderers import JSONRenderer
+from users.models import User
+from parking_lots.models import ParkingLot, ParkingSpace
+from parking_transactions.models import ParkingTransaction
+from api.serializers import UserSerializer, ParkingLotSerializer, ParkingTransactionSerializer
+from django.db.models import Sum, Count
+from rest_framework import status
+from datetime import datetime, timedelta
+from alerts.models import Alert
+from api.serializers import AlertSerializer
+from api.models import SupportTicket
+from api.serializers import SupportTicketSerializer
+
+def is_company_admin(user):
+    return getattr(user, 'role', None) == 'company_admin'
+
+class IsCompanyAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return is_company_admin(request.user)
+
+# 1. Dashboard (Global Overview)
+class CompanyDashboardAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        total_revenue = ParkingTransaction.objects.aggregate(total=Sum('fee'))['total'] or 0
+        total_users = User.objects.filter(is_email_verified=True, is_staff=False, role='driver').count()
+        total_clients = User.objects.filter(role='client').count()
+        total_locations = ParkingLot.objects.count()
+        active_sessions = ParkingTransaction.objects.filter(status='ongoing').count()
+        live_occupancy = ParkingSpace.objects.filter(is_occupied=True).count()
+        recent_transactions = ParkingTransactionSerializer(ParkingTransaction.objects.order_by('-created_at')[:10], many=True).data
+        kpis = {
+            'total_revenue': total_revenue,
+            'total_users': total_users,
+            'total_clients': total_clients,
+            'total_locations': total_locations,
+            'active_sessions': active_sessions,
+            'live_occupancy': live_occupancy,
+        }
+        response = Response({
+            'kpis': kpis,
+            'recent_transactions': recent_transactions,
+        })
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 2. Clients Management
+class CompanyClientsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        clients = User.objects.filter(role='client')
+        data = []
+        for client in clients:
+            lots = ParkingLot.objects.filter(client=client)
+            revenue = ParkingTransaction.objects.filter(parking_space__parking_lot__client=client).aggregate(total=Sum('fee'))['total'] or 0
+            data.append({
+                'client': UserSerializer(client).data,
+                'total_locations': lots.count(),
+                'revenue': revenue,
+            })
+        response = Response(data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+class CompanyClientDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+    def get(self, request, client_id):
+        response = Response({"message": f"Client {client_id} details"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def put(self, request, client_id):
+        response = Response({"message": f"Client {client_id} updated"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def delete(self, request, client_id):
+        response = Response({"message": f"Client {client_id} deleted"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 3. Locations Management
+class CompanyLocationsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        lots = ParkingLot.objects.all()
+        response = Response(ParkingLotSerializer(lots, many=True).data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+class CompanyLocationDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+    def get(self, request, location_id):
+        response = Response({"message": f"Location {location_id} details"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def put(self, request, location_id):
+        response = Response({"message": f"Location {location_id} updated"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def delete(self, request, location_id):
+        response = Response({"message": f"Location {location_id} deleted"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 4. Users (Drivers)
+class CompanyUsersAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        users = User.objects.filter(role='driver')
+        response = Response(UserSerializer(users, many=True).data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+class CompanyUserDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+    def get(self, request, user_id):
+        response = Response({"message": f"User {user_id} details"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def put(self, request, user_id):
+        response = Response({"message": f"User {user_id} updated"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 5. Staff Management
+class CompanyStaffAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        staff = User.objects.filter(role='staff')
+        response = Response(UserSerializer(staff, many=True).data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def post(self, request):
+        data = request.data.copy()
+        data['role'] = 'staff'
+        serializer = UserSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(role='staff')
+            response = Response(serializer.data, status=201)
+        else:
+            response = Response(serializer.errors, status=400)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+class CompanyStaffDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request, staff_id):
+        try:
+            staff = User.objects.get(id=staff_id, role='staff')
+            response = Response(UserSerializer(staff).data)
+        except User.DoesNotExist:
+            response = Response({'error': 'Not found'}, status=404)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def put(self, request, staff_id):
+        try:
+            staff = User.objects.get(id=staff_id, role='staff')
+            serializer = UserSerializer(staff, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                response = Response(serializer.data)
+            else:
+                response = Response(serializer.errors, status=400)
+        except User.DoesNotExist:
+            response = Response({'error': 'Not found'}, status=404)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def delete(self, request, staff_id):
+        try:
+            staff = User.objects.get(id=staff_id, role='staff')
+            staff.delete()
+            response = Response(status=204)
+        except User.DoesNotExist:
+            response = Response({'error': 'Not found'}, status=404)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 6. Parking Sessions (Live Activity)
+class CompanyParkingSessionsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        sessions = ParkingTransaction.objects.filter(status='ongoing')
+        response = Response(ParkingTransactionSerializer(sessions, many=True).data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 7. Parking History (All Time)
+class CompanyParkingHistoryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        response = Response({"message": "Parking history data (all time)"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 8. Financial Transactions
+class CompanyFinancialTransactionsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        today = datetime.today().date()
+        days = [today - timedelta(days=i) for i in range(30)]
+        revenue_by_day = []
+        for day in days:
+            total = ParkingTransaction.objects.filter(
+                created_at__date=day
+            ).aggregate(total=Sum('fee'))['total'] or 0
+            revenue_by_day.append({'date': day, 'revenue': total})
+        response = Response({'revenue_by_day': revenue_by_day})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 9. Analytics & Reports
+class CompanyAnalyticsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        clients = User.objects.filter(role='client')
+        analytics = []
+        for client in clients:
+            revenue = ParkingTransaction.objects.filter(parking_space__parking_lot__client=client).aggregate(total=Sum('fee'))['total'] or 0
+            sessions = ParkingTransaction.objects.filter(parking_space__parking_lot__client=client).count()
+            analytics.append({
+                'client': UserSerializer(client).data,
+                'revenue': revenue,
+                'sessions': sessions,
+            })
+        response = Response({'client_performance': analytics})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 10. Notifications & Alerts
+class CompanyNotificationsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        alerts = Alert.objects.all().order_by('-created_at')[:100]
+        response = Response(AlertSerializer(alerts, many=True).data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 11. System Settings
+class CompanySettingsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        response = Response({"message": "System settings data"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def put(self, request):
+        response = Response({"message": "System settings updated"})
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+
+# 12. Support / Helpdesk
+class CompanySupportAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsCompanyAdmin]
+    renderer_classes = [JSONRenderer]
+    def get(self, request):
+        tickets = SupportTicket.objects.all().order_by('-created_at')[:100]
+        response = Response(SupportTicketSerializer(tickets, many=True).data)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def post(self, request):
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = SupportTicketSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            response = Response(serializer.data, status=201)
+        else:
+            response = Response(serializer.errors, status=400)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
+    def put(self, request):
+        ticket_id = request.data.get('id')
+        try:
+            ticket = SupportTicket.objects.get(id=ticket_id)
+            serializer = SupportTicketSerializer(ticket, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                response = Response(serializer.data)
+            else:
+                response = Response(serializer.errors, status=400)
+        except SupportTicket.DoesNotExist:
+            response = Response({'error': 'Not found'}, status=404)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = 'application/json'
+        response.renderer_context = {}
+        return response
