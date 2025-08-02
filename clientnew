@@ -1,0 +1,648 @@
+Inoseek Client Dashboard Definition
+App Overview
+The Inoseek Client Dashboard is a secure, responsive React-based SPA for clients to monitor their parking lots, view transactions, manage staff, access analytics, and handle support tickets. It provides read-only access to sensitive data (e.g., revenue, transactions) and limited CRUD for non-critical data (e.g., locations, staff, support tickets), powered by /api/client and /api/login endpoints.
+
+Name: Inoseek Client Dashboard
+Tagline: Park and Dash
+Brand Colors: Primary Blue (#1E90FF), Secondary Light Blue (#87CEEB), Accent Dark Blue (#4169E1)
+Logo: "Inoseek" in Montserrat Bold, #1E90FF, with a parking icon in the "O".
+Target Audience: Clients managing parking lots in Kenya (phone format: 2547XXXXXXXX or 2541XXXXXXXX).
+Platform: React SPA with Tailwind CSS, CDN-hosted.
+
+Screens and Functionalities
+Sidebar navigation (collapsible on tablet/mobile) with views mapped to API endpoints, featuring glassmorphic cards, neumorphic buttons, and animations.
+1. Login Screen
+
+Purpose: Authenticate clients.
+Functionality:
+Collect email, password.
+Submit to /api/login (LoginAPIView).
+Success: Store tokens, navigate to Dashboard.
+Error: Display invalid credentials/unverified email.
+
+
+API Endpoints: POST /api/login
+UI Elements:
+Logo: "Inoseek" (Montserrat Bold, 48px desktop, 36px mobile, #1E90FF).
+Tagline: "Park and Dash" (Roboto, 18px desktop, 16px mobile, #333333).
+Inputs: Email, Password (Roboto, #E0E0E0 border, #1E90FF focus, neumorphic).
+Submit Button: "Login" (#1E90FF, 300ms scale, hover #4169E1).
+Error Message: Red (#FF4444), 200ms fade-in.
+Background: White, #87CEEB gradient (top 30%), glassmorphic container.
+Animation: Logo pulses (500ms), inputs slide in, button scales.
+
+
+UX Notes:
+Desktop: Centered form, 400px.
+Tablet: Form 80% width.
+Mobile: Full-width, 44px input height.
+Features: Password show/hide, auto-focus email, keyboard submit, error shake.
+
+
+
+2. Dashboard Screen
+
+Purpose: Overview of client’s parking operations.
+Functionality:
+Display KPIs: revenue, cars parked now, total spaces, active locations (ClientDashboardAPIView).
+Show recent transactions (last 10).
+Filter by location (location_id).
+Export KPIs, transactions, locations as PDF/CSV.
+
+
+API Endpoints: GET /api/client/dashboard
+UI Elements:
+Sidebar: Navigation (Dashboard, Locations, Current Parking, History, Financials, Analytics, Staff, Notifications, Settings, Support, Logout).
+KPI Cards: 4 glassmorphic cards (revenue, parked now, total spaces, locations, #1E90FF accents).
+Recent Transactions: Table (plate, space, fee, status).
+Location Filter: Dropdown, #1E90FF, 300ms slide-down.
+Export Button: #1E90FF, modal for PDF/CSV.
+Refresh Button: #1E90FF, 300ms rotate.
+Background: White, #87CEEB gradient header.
+Animation: Cards zoom in (500ms), table rows fade in, export modal zooms.
+
+
+UX Notes:
+Desktop: 2x2 KPI grid, full table.
+Tablet: 2x2 grid, stacked table.
+Mobile: Single-column KPIs, card-based table.
+Features: Hover tooltips, clickable rows, swipe-to-refresh, export with location filter.
+
+
+
+3. Locations Management Screen
+
+Purpose: Manage client’s parking lots.
+Functionality:
+List lots (ClientLocationsAPIView).
+Create new lot (ClientLocationsAPIView).
+Edit existing lot (ClientLocationDetailAPIView).
+Export lots as PDF/CSV (name, location, spaces).
+
+
+API Endpoints:
+GET/POST /api/client/locations
+PUT /api/client/locations/{location_id}
+
+
+UI Elements:
+Sidebar: Navigation.
+Location Table: Columns (name, location, spaces, actions), glassmorphic.
+Create Button: #1E90FF, modal for name/location/spaces.
+Action Buttons: View (#1E90FF), Edit (#4169E1).
+Export Button: #1E90FF, modal for PDF/CSV.
+Modal: Create/edit form (#1E90FF focus).
+Background: White.
+Animation: Table rows slide in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Validate inputs, export full list, clickable rows.
+
+
+
+4. Current Parking Screen
+
+Purpose: Monitor live parking activity.
+Functionality:
+List occupied spaces (ClientCurrentParkingAPIView).
+Filter by location (location_id).
+Export spaces as PDF/CSV (space number, location, occupancy).
+
+
+API Endpoints: GET /api/client/current-parking
+UI Elements:
+Sidebar: Navigation.
+Parking Table: Columns (space number, location, occupied), glassmorphic.
+Location Filter: Dropdown, #1E90FF.
+Export Button: #1E90FF, modal for PDF/CSV.
+Refresh Button: #1E90FF, 300ms rotate.
+Background: White.
+Animation: Table rows slide in, export button scales.
+
+
+UX Notes:
+Desktop: Full table.
+Tablet: Stacked table.
+Mobile: Card-based list.
+Features: Auto-refresh (30s), export with filter.
+
+
+
+5. Parking History Screen
+
+Purpose: View transaction history.
+Functionality:
+List transactions (ClientParkingHistoryAPIView).
+Filter by date range, plate.
+Export history as PDF/CSV (plate, space, lot, entry/exit, fee, status).
+
+
+API Endpoints: GET /api/client/parking-history
+UI Elements:
+Sidebar: Navigation.
+History Table: Columns (plate, space, lot, entry/exit, fee, status), glassmorphic.
+Filters: Date range picker, plate search, #1E90FF.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Table rows fade in, export button scales.
+
+
+UX Notes:
+Desktop: Full table.
+Tablet: Stacked table.
+Mobile: Card-based list.
+Features: Export with filters, pagination.
+
+
+
+6. Financial Reports Screen
+
+Purpose: View revenue trends (read-only).
+Functionality:
+Display 30-day revenue by day (ClientFinancialReportsAPIView).
+Visualize as line/bar chart.
+Export chart/table as PDF/CSV (date, revenue).
+
+
+API Endpoints: GET /api/client/financial-reports
+UI Elements:
+Sidebar: Navigation.
+Chart: Line/bar (#1E90FF lines, 500ms fade-in).
+Table: Date, revenue, glassmorphic.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Chart animates, table rows slide in, export button scales.
+
+
+UX Notes:
+Desktop: Chart above table.
+Tablet: Chart full-width, table below.
+Mobile: Stacked chart/table.
+Features: Interactive chart (hover tooltips), export full data.
+
+
+
+7. Analytics & Insights Screen
+
+Purpose: Analyze lot performance (read-only).
+Functionality:
+List lots with revenue, sessions (ClientAnalyticsAPIView).
+Visualize as bar/pie chart.
+Export analytics as PDF/CSV (location, revenue, sessions).
+
+
+API Endpoints: GET /api/client/analytics
+UI Elements:
+Sidebar: Navigation.
+Analytics Table: Columns (location, revenue, sessions), glassmorphic.
+Chart: Bar/pie (#1E90FF/#4169E1).
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Chart zooms, table rows fade in, export button scales.
+
+
+UX Notes:
+Desktop: Chart beside table.
+Tablet: Chart above table.
+Mobile: Stacked chart/table.
+Features: Export full data, clickable rows.
+
+
+
+8. Staff Management Screen
+
+Purpose: Manage staff for client’s lots.
+Functionality:
+List, create, edit, delete staff (ClientStaffAPIView, ClientStaffDetailAPIView).
+Export staff as PDF/CSV (name, email, phone).
+
+
+API Endpoints:
+GET/POST /api/client/staff
+PUT/DELETE /api/client/staff/{staff_id}
+
+
+UI Elements:
+Sidebar: Navigation.
+Staff Table: Columns (name, email, phone, actions), glassmorphic.
+Create Button: #1E90FF, modal for name/email/password.
+Action Buttons: View (#1E90FF), Edit (#4169E1), Delete (#FF4444).
+Export Button: #1E90FF, modal for PDF/CSV.
+Modal: Create/edit form (#1E90FF focus).
+Background: White.
+Animation: Table rows fade in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Full table, modal 600px.
+Tablet: Stacked table, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Confirm delete, validate email/password, export full list.
+
+
+
+9. Notifications Screen
+
+Purpose: View alerts for client’s lots (read-only).
+Functionality:
+List alerts (ClientNotificationsAPIView).
+Export alerts as PDF/CSV (plate, space, description, status).
+
+
+API Endpoints: GET /api/client/notifications
+UI Elements:
+Sidebar: Navigation.
+Alert Table: Columns (plate, space, description, status), glassmorphic.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Table rows slide in, export button scales.
+
+
+UX Notes:
+Desktop: Full table.
+Tablet: Stacked table.
+Mobile: Card-based list.
+Features: Auto-refresh, export full list.
+
+
+
+10. Settings Screen
+
+Purpose: View/edit client settings (limited).
+Functionality:
+View/edit settings (ClientSettingsAPIView, placeholder for future fields like contact info).
+Export settings as PDF/CSV (TBD fields).
+
+
+API Endpoints: GET/PUT /api/client/settings
+UI Elements:
+Sidebar: Navigation.
+Form: Settings fields (TBD, #1E90FF focus), glassmorphic.
+Save Button: #1E90FF, 300ms scale.
+Export Button: #1E90FF, modal for PDF/CSV.
+Background: White.
+Animation: Form fields fade in, export button scales.
+
+
+UX Notes:
+Desktop: Form 600px.
+Tablet: Form 80%.
+Mobile: Full-width form.
+Features: Confirm changes, export settings snapshot.
+
+
+
+11. Support Screen
+
+Purpose: Manage support tickets and view FAQs.
+Functionality:
+List/create tickets (ClientSupportTicketsAPIView).
+View FAQs (ClientSupportFAQsAPIView, placeholder).
+Export tickets as PDF/CSV (subject, user, status, date).
+
+
+API Endpoints:
+GET/POST /api/client/support/tickets
+GET /api/client/support/faqs
+
+
+UI Elements:
+Sidebar: Navigation.
+Ticket Table: Columns (subject, status, date), glassmorphic.
+Create Button: #1E90FF, modal for subject/description.
+Export Button: #1E90FF, modal for PDF/CSV.
+FAQ Section: Accordion (TBD, #1E90FF headers).
+Background: White.
+Animation: Table rows slide in, modal zooms, export button scales.
+
+
+UX Notes:
+Desktop: Table and FAQs side-by-side, modal 600px.
+Tablet: Stacked table/FAQs, modal 80%.
+Mobile: Card-based list, full-screen modal.
+Features: Validate ticket inputs, export with filters.
+
+
+
+Navigation Flow
+
+Unauthenticated: Login → Dashboard
+Authenticated: Sidebar navigates to Dashboard, Locations, Current Parking, History, Financials, Analytics, Staff, Notifications, Settings, Support, Logout
+Responsive Navigation:
+Desktop: Fixed sidebar.
+Tablet: Collapsible sidebar (hamburger).
+Mobile: Full-screen hamburger menu.
+
+
+
+Technical Considerations
+
+Framework: React SPA, Tailwind CSS for responsive styling.
+API: Secure HTTP requests, token refresh on 401 errors.
+Storage: localStorage for JWT tokens, secure session management.
+Real-time: Polling for current parking/notifications, future WebSocket support.
+Export Libraries: Client-side PDF/CSV generation (e.g., pdfmake, PapaParse).
+Responsive Design: Tailwind responsive classes, fluid typography, flexible grids.
+Accessibility: ARIA labels, keyboard navigation, WCAG 2.1, accessible PDF exports.
+Localization: English/Swahili, Kenyan phone formats.
+
+Data Manipulation
+
+Read-Only: Revenue, transactions, analytics, notifications (protects company-critical data).
+Editable:
+Locations: Create/edit (ClientLocationsAPIView, ClientLocationDetailAPIView).
+Staff: Create/edit/delete (ClientStaffAPIView, ClientStaffDetailAPIView).
+Support: Create tickets (ClientSupportTicketsAPIView).
+
+
+Restricted: No editing of revenue, transactions, or system settings to maintain integrity.
+Exports: PDF/CSV for all data-heavy screens, respecting filters.
+
+Integration with Mobile and Company Dashboards
+
+Consistency: Shared branding (logo, colors, typography) with mobile app and company dashboard.
+Data Flow: Mobile app’s external system (car detection, payments, exits) updates client dashboard’s parking and financial data in real-time.
+Scope: Client dashboard is scoped to client’s lots, unlike company dashboard’s system-wide access.
+
+Future Enhancements
+
+Detailed FAQ content (ClientSupportFAQsAPIView).
+Advanced settings (e.g., lot-specific rates).
+Multi-language support.
+
+
+
+This is the API endpoints
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, BasePermission
+from parking_lots.models import ParkingLot, ParkingSpace
+from parking_transactions.models import ParkingTransaction
+from api.serializers import ParkingLotSerializer, ParkingTransactionSerializer
+from django.db.models import Sum, Count, Q
+from rest_framework import status
+from datetime import datetime, timedelta
+from alerts.models import Alert
+from api.serializers import AlertSerializer, UserSerializer
+from django.contrib.auth import get_user_model
+from api.models import SupportTicket
+from api.serializers import SupportTicketSerializer
+
+User = get_user_model()
+
+class IsClientPermission(BasePermission):
+    def has_permission(self, request, view):
+        return getattr(request.user, 'role', None) == 'client'
+
+# 1. Dashboard (Home Overview)
+class ClientDashboardAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        location_id = request.query_params.get('location_id')
+        lots = ParkingLot.objects.filter(client=request.user)
+        if location_id:
+            lots = lots.filter(id=location_id)
+        lot_ids = lots.values_list('id', flat=True)
+        spaces = ParkingSpace.objects.filter(parking_lot__in=lot_ids)
+        transactions = ParkingTransaction.objects.filter(parking_space__parking_lot__in=lot_ids)
+        now_parked = spaces.filter(is_occupied=True).count()
+        total_spaces = spaces.count()
+        total_revenue = transactions.aggregate(total=Sum('fee'))['total'] or 0
+        kpis = {
+            'total_revenue': total_revenue,
+            'cars_parked_now': now_parked,
+            'total_spaces': total_spaces,
+            'locations_active': lots.count(),
+        }
+        recent_transactions = ParkingTransactionSerializer(transactions.order_by('-created_at')[:10], many=True).data
+        return Response({
+            'kpis': kpis,
+            'recent_transactions': recent_transactions,
+            'locations': ParkingLotSerializer(lots, many=True).data,
+        })
+
+# 2. Locations Management
+class ClientLocationsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        lots = ParkingLot.objects.filter(client=request.user)
+        return Response(ParkingLotSerializer(lots, many=True).data)
+    def post(self, request):
+        data = request.data.copy()
+        data['client'] = request.user.id
+        serializer = ParkingLotSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(client=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+class ClientLocationDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def put(self, request, location_id):
+        try:
+            lot = ParkingLot.objects.get(id=location_id, client=request.user)
+        except ParkingLot.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+        serializer = ParkingLotSerializer(lot, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+# 3. Current Parking (Live Activity)
+class ClientCurrentParkingAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        location_id = request.query_params.get('location_id')
+        lots = ParkingLot.objects.filter(client=request.user)
+        if location_id:
+            lots = lots.filter(id=location_id)
+        spaces = ParkingSpace.objects.filter(parking_lot__in=lots)
+        occupied = spaces.filter(is_occupied=True)
+        data = [
+            {
+                'space_number': s.space_number,
+                'location': s.parking_lot.name,
+                'is_occupied': s.is_occupied,
+            } for s in occupied
+        ]
+        return Response({
+            'occupied_spaces': len(data),
+            'free_spaces': spaces.count() - len(data),
+            'details': data,
+        })
+
+# 4. Parking History
+class ClientParkingHistoryAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        lots = ParkingLot.objects.filter(client=request.user)
+        lot_ids = lots.values_list('id', flat=True)
+        transactions = ParkingTransaction.objects.filter(parking_space__parking_lot__in=lot_ids)
+        # Optional filters
+        date_from = request.query_params.get('date_from')
+        date_to = request.query_params.get('date_to')
+        plate = request.query_params.get('plate')
+        if date_from:
+            transactions = transactions.filter(entry_time__gte=date_from)
+        if date_to:
+            transactions = transactions.filter(exit_time__lte=date_to)
+        if plate:
+            transactions = transactions.filter(car__number_plate__icontains=plate)
+        return Response(ParkingTransactionSerializer(transactions.order_by('-entry_time')[:100], many=True).data)
+
+# 5. Financial Reports / Transactions
+class ClientFinancialReportsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        lots = ParkingLot.objects.filter(client=request.user)
+        lot_ids = lots.values_list('id', flat=True)
+        transactions = ParkingTransaction.objects.filter(parking_space__parking_lot__in=lot_ids)
+        # Revenue by day for last 30 days
+        today = datetime.today().date()
+        days = [today - timedelta(days=i) for i in range(30)]
+        revenue_by_day = []
+        for day in days:
+            total = transactions.filter(created_at__date=day).aggregate(total=Sum('fee'))['total'] or 0
+            revenue_by_day.append({'date': day, 'revenue': total})
+        return Response({'revenue_by_day': revenue_by_day})
+
+# 6. Analytics & Insights
+class ClientAnalyticsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        lots = ParkingLot.objects.filter(client=request.user)
+        analytics = []
+        for lot in lots:
+            revenue = ParkingTransaction.objects.filter(parking_space__parking_lot=lot).aggregate(total=Sum('fee'))['total'] or 0
+            sessions = ParkingTransaction.objects.filter(parking_space__parking_lot=lot).count()
+            analytics.append({
+                'location': ParkingLotSerializer(lot).data,
+                'revenue': revenue,
+                'sessions': sessions,
+            })
+        return Response({'location_performance': analytics})
+
+# 7. Staff Management
+class ClientStaffAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        staff = User.objects.filter(role='staff', parking_lots__client=request.user).distinct()
+        return Response(UserSerializer(staff, many=True).data)
+    def post(self, request):
+        data = request.data.copy()
+        data['role'] = 'staff'
+        serializer = UserSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(role='staff')
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+class ClientStaffDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def put(self, request, staff_id):
+        try:
+            staff = User.objects.get(id=staff_id, role='staff', parking_lots__client=request.user)
+        except User.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+        serializer = UserSerializer(staff, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    def delete(self, request, staff_id):
+        try:
+            staff = User.objects.get(id=staff_id, role='staff', parking_lots__client=request.user)
+        except User.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+        staff.delete()
+        return Response(status=204)
+
+# 8. Notifications
+class ClientNotificationsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        lots = ParkingLot.objects.filter(client=request.user)
+        spaces = ParkingSpace.objects.filter(parking_lot__in=lots)
+        alerts = Alert.objects.filter(parking_space__in=spaces).order_by('-created_at')[:100]
+        return Response(AlertSerializer(alerts, many=True).data)
+
+# 9. Settings
+class ClientSettingsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        return Response({"message": "Client settings data"})
+    def put(self, request):
+        return Response({"message": "Client settings updated"})
+
+# 10. Support / Help
+class ClientSupportFAQsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        return Response({"message": "FAQs data"})
+
+class ClientSupportTicketsAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsClientPermission]
+    def get(self, request):
+        tickets = SupportTicket.objects.filter(user=request.user).order_by('-created_at')[:100]
+        return Response(SupportTicketSerializer(tickets, many=True).data)
+    def post(self, request):
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = SupportTicketSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        if not all([email, password]):
+            return Response(
+                {'status': 'error', 'message': 'Email and password are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            logger.error(f"Login attempt with non-existent email: {email}")
+            return Response(
+                {'status': 'error', 'message': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if not user.check_password(password):
+            logger.warning(f"Invalid password attempt for user {email}")
+            return Response(
+                {'status': 'error', 'message': 'Invalid password'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if not user.is_email_verified:
+            logger.warning(f"Unverified email login attempt for user {email}")
+            return Response(
+                {'status': 'error', 'message': 'Email not verified'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        refresh = RefreshToken.for_user(user)
+        logger.info(f"User {email} logged in successfully")
+        return Response({
+            'status': 'success',
+            'message': 'Login successful',
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh),
+            'user': UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
